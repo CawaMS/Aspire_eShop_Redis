@@ -3,12 +3,12 @@ using Store.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<ProductService>();
-builder.Services.AddHttpClient<ProductService>(c =>
-{
-    var url = builder.Configuration["ProductEndpoint"] ?? throw new InvalidOperationException("ProductEndpoint is not set");
+builder.AddServiceDefaults();
 
-    c.BaseAddress = new(url);
+//builder.Services.AddSingleton<ProductService>();
+builder.Services.AddHttpClient<ProductService>(client =>
+{
+    client.BaseAddress = new("https+http://products");
 });
 
 // Add services to the container.
@@ -16,6 +16,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
