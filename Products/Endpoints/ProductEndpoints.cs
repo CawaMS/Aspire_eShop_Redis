@@ -29,6 +29,16 @@ public static class ProductEndpoints
         .Produces<Product>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound);
 
+        group.MapGet("/Category/{Category}", async (string Category, ProductDataContext db) =>
+        {
+            return await db.Product
+                            .Where(model => model.Category == Category)
+                            .ToListAsync();
+        })
+        .WithName("GetProductByCategory")
+        .Produces<Product>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
+
         group.MapPut("/{id}", async  (int id, Product product, ProductDataContext db) =>
         {
             var affected = await db.Product
@@ -36,6 +46,7 @@ public static class ProductEndpoints
                 .ExecuteUpdateAsync(setters => setters
                   .SetProperty(m => m.Id, product.Id)
                   .SetProperty(m => m.Name, product.Name)
+                  .SetProperty(m => m.Category, product.Category)
                   .SetProperty(m => m.Description, product.Description)
                   .SetProperty(m => m.Price, product.Price)
                   .SetProperty(m => m.ImageUrl, product.ImageUrl)

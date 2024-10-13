@@ -10,6 +10,9 @@ public class Product
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
+    [JsonPropertyName("category")]
+    public string? Category { get; set; }
+
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 
