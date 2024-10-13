@@ -1,20 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataEntities;
 
 namespace TestData
 {
     internal class UploadData
     {
-        public static void UploadCsvData(string filePath)
-        {
-            // Read .csv data file line by line
+        private readonly ProductHTTPClient _productHTTPClient;
 
-            // Create Product object
-            // Call API to POST Product object
-            // Display response
+        public UploadData(ProductHTTPClient productHTTPClient)
+        {
+            _productHTTPClient = productHTTPClient;
+        }
+        public async Task UploadCsvData(string filePath)
+        {
+            using (var reader = new StreamReader(@$"{filePath}"))
+            {
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(',');
+                    Console.WriteLine($"Name: {values[0]}, Price: {values[1]}, Description: {values[2]}, Category: {values[3]}, ImageUrl: {values[4]}");
+                    var product = new Product
+                    {
+                        Name = values[0],
+                        Category = values[1],
+                        Description = values[2],
+                        Price = Convert.ToDecimal(values[3]),                                              
+                        ImageUrl = values[4]
+                    };
+                    await _productHTTPClient.UploadProduct(product);
+                }
+            }
         }
     }
 }
