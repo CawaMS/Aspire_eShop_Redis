@@ -1,14 +1,23 @@
 ﻿using DataEntities;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using NuGet.Protocol;
 using Products.Data;
+using StackExchange.Redis;
+using System.Text.Json;
 
 namespace Products.Endpoints;
 
 public static class ProductEndpoints
 {
-    public static void MapProductEndpoints (this IEndpointRouteBuilder routes)
+    private static readonly string CacheKeyPostFix = "Product";
+
+    public static void MapProductEndpoints (this IEndpointRouteBuilder routes, IConnectionMultiplexer connectionMultiplexer)
     {
         var group = routes.MapGroup("/api/Product");
+        IDatabase RedisDb = connectionMultiplexer.GetDatabase();
+
 
         group.MapGet("/", async (ProductDataContext db) =>
         {
@@ -19,11 +28,23 @@ public static class ProductEndpoints
 
         group.MapGet("/{id}", async  (int id, ProductDataContext db) =>
         {
-            return await db.Product.AsNoTracking()
-                .FirstOrDefaultAsync(model => model.Id == id)
-                is Product model
-                    ? Results.Ok(model)
-                    : Results.NotFound();
+            var ProductString = ((await RedisDb.StringGetAsync($"{id}"+$"_{CacheKeyPostFix}")));
+            if (!ProductString.Equals(RedisValue.Null))
+            {
+                Product _product = JsonSerializer.Deserialize<Product>(ProductString.ToString());
+                return Results.Ok(_product);
+            }
+            else 
+            {
+                Product product = await db.Product.AsNoTracking()
+                               .FirstOrDefaultAsync(model => model.Id == id) is Product model ? model : throw new Exception("item not found");
+
+                await RedisDb.StringSetAsync($"{id}"+$"_{CacheKeyPostFix}",JsonSerializer.Serialize(product));
+
+                return Results.Ok(model);
+            }
+
+
         })
         .WithName("GetProductById")
         .Produces<Product>(StatusCodes.Status200OK)
