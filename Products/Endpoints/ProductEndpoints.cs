@@ -1,4 +1,5 @@
 ﻿using DataEntities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Products.Data;
 
@@ -17,7 +18,7 @@ public static class ProductEndpoints
         .WithName("GetAllProducts")
         .Produces<List<Product>>(StatusCodes.Status200OK);
 
-        group.MapGet("/{id}", async  (int id, ProductDataContext db) =>
+        group.MapGet("/getProductById", async  ([FromQuery]int id, ProductDataContext db) =>
         {
             return await db.Product.AsNoTracking()
                 .FirstOrDefaultAsync(model => model.Id == id)
