@@ -1,0 +1,56 @@
+﻿@page "/product/{productId:int}"
+@using DataEntities
+@using Store.Services
+@inject ProductService ProductService
+@inject NavigationManager Nav
+
+<h3>ProductItem</h3>
+
+@if (product is not null)
+{
+    <PageTitle>@product.Name</PageTitle>
+
+    <div class="item-details">
+        <img alt="@product.Name" src="https://raw.githubusercontent.com/MicrosoftDocs/mslearn-dotnet-cloudnative/main/dotnet-docker/Products/wwwroot/images/@product.ImageUrl" />
+        <div class="description">
+            <p>@product.Description</p>
+            <p>
+                Category: <strong>@product.Category</strong>
+            </p>            
+        </div>
+    </div>
+    
+}
+else if (notFound)
+{
+    <h1>Not found</h1>
+    <div class="item-details">
+        <p>Sorry, we couldn't find any such product.</p>
+    </div>
+}
+
+
+@code {
+    private Product? product;
+    private bool notFound = false;
+
+    [Parameter]
+    public int productId { get; set; }
+
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            product = await ProductService.GetProductById(productId);
+        }catch (Exception ex)
+        {
+            HttpContext!.Response.StatusCode = 404;
+            notFound = true;
+        }
+    
+        
+    }
+}
