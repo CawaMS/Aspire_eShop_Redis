@@ -1,0 +1,20 @@
+﻿@using DataEntities
+@using Store.Services
+@inject ProductService ProductService
+
+<div class="catalog-item">
+    <a class="catalog-product" href="" data-enhance-nav="false">
+        <span class='catalog-product-image'>
+            <img alt="@product.Name" src='https://raw.githubusercontent.com/MicrosoftDocs/mslearn-dotnet-cloudnative/main/dotnet-docker/Products/wwwroot/images/@product.ImageUrl' />
+        </span>
+        <span class='catalog-product-content'>
+            <span class='name'>@product.Name</span>
+            <span class='price'>$@product.Price.ToString("0.00")</span>
+        </span>
+    </a>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public required Product product { get; set; }
+}
