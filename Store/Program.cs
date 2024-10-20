@@ -51,6 +51,8 @@ builder.Services.AddIdentityCore<StoreUser>(options => options.SignIn.RequireCon
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSingleton<IEmailSender<StoreUser>, IdentityNoOpEmailSender>();
 
 var app = builder.Build();
@@ -69,6 +71,7 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseAuthorization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

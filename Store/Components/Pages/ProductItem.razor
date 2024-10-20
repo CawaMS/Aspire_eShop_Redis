@@ -4,6 +4,7 @@
 @inject ProductService ProductService
 @inject ICartService CartService
 @inject NavigationManager Nav
+@inject IHttpContextAccessor HttpContextAccessor
 
 <h3>ProductItem</h3>
 
@@ -72,6 +73,7 @@ else if (notFound)
     {
         try
         {
+            HttpContext = HttpContextAccessor.HttpContext;
             isLoggedIn = HttpContext?.User.Identity?.IsAuthenticated == true;
             product = await ProductService.GetProductById(productId);
         }catch (Exception ex)

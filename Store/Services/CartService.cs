@@ -3,6 +3,7 @@ using Store.Helpers;
 using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 using System.Globalization;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Store.Services
 {
@@ -123,7 +124,7 @@ namespace Store.Services
             var CartKey = GetCartKey(userName);
             byte[]? cartItemslist = await _database.HashGetAsync(CartKey, CartItemListFieldKey);
 
-            if (!(cartItemslist.Length > 0))
+            if (cartItemslist.IsNullOrEmpty())
             {
                 yield break;
             }
