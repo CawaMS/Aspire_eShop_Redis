@@ -26,7 +26,6 @@ namespace Store.Services
 
         public async Task AddItem(string userName, int itemId, decimal price, int quantity = 1)
         {            
-            // byte[] cartItemListByteArray = await _cache.GetAsync(GetCartItemListKey(username));
             var CartKey = GetCartKey(userName);
             var CartHash = await _database.HashGetAllAsync(CartKey);
 
@@ -35,8 +34,6 @@ namespace Store.Services
                 List<CartItem> cartItemList = new List<CartItem>();
                 CartItem cartItemToAdd = new CartItem(itemId, quantity, price);
                 cartItemList.Add(cartItemToAdd);
-                //byte[] newCartItemByteArray = await ConvertData<CartItem>.ObjectListToByteArray(cartItemList);
-                //await _cache.SetAsync(GetCartItemListKey(username), newCartItemByteArray, options);
                 await _database.HashSetAsync(CartKey, 
                     new HashEntry[] 
                     { new HashEntry(CartItemListFieldKey, ConvertData<CartItem>.ObjectListToByteArray(cartItemList).Result),
@@ -46,9 +43,9 @@ namespace Store.Services
             }
             else
             {
-                byte[] CartItemListByteArray = CartHash.Where(hashEntry => hashEntry.Name == CartItemListFieldKey).FirstOrDefault().Value;
+                byte[]? CartItemListByteArray = CartHash.Where(hashEntry => hashEntry.Name == CartItemListFieldKey).FirstOrDefault().Value;
                 List<CartItem> CartItemList = await ConvertData<CartItem>.ByteArrayToObjectList(CartItemListByteArray).ToListAsync();
-                CartItem cartItem = CartItemList.Where(item => item.ItemId == itemId).FirstOrDefault();
+                CartItem? cartItem = CartItemList.Where(item => item.ItemId == itemId).FirstOrDefault();
                 if (cartItem != null)
                 {
                     CartItem newCartItem = new CartItem(itemId, cartItem.Quantity+1, price);
@@ -75,7 +72,6 @@ namespace Store.Services
                 return;
             }
 
-            //await _cache.RemoveAsync(GetCartItemListKey(username));
             await _database.KeyDeleteAsync(GetCartKey(username));
         }
 
@@ -105,7 +101,7 @@ namespace Store.Services
             }
             else
             {
-                byte[] CartItemListByteArray = CartHash.Where(hashEntry => hashEntry.Name == CartItemListFieldKey).FirstOrDefault().Value;
+                byte[]? CartItemListByteArray = CartHash.Where(hashEntry => hashEntry.Name == CartItemListFieldKey).FirstOrDefault().Value;
                 await _database.HashSetAsync(newCartKey, new HashEntry[] 
                         { new HashEntry(CartItemListFieldKey, CartItemListByteArray),
                           new HashEntry(CartIdFieldKey, newCartKey),
@@ -125,9 +121,9 @@ namespace Store.Services
             }
 
             var CartKey = GetCartKey(userName);
-            byte[] cartItemslist = await _database.HashGetAsync(CartKey, CartItemListFieldKey);
+            byte[]? cartItemslist = await _database.HashGetAsync(CartKey, CartItemListFieldKey);
 
-            if (!(cartItemslist.Count() > 0))
+            if (!(cartItemslist.Length > 0))
             {
                 yield break;
             }
@@ -142,7 +138,7 @@ namespace Store.Services
 
         }
 
-        private async Task<int> generateCartId()
+        private int generateCartId()
         {
             var rand = new Random();
             int cartId = rand.Next();

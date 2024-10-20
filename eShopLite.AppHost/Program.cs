@@ -19,9 +19,6 @@ var products = builder.AddProject<Products>("products")
                 .WithReference(sql)
                 .WithReference(cache);
 
-builder.AddProject<Carts>("carts")
-        .WithReference(cache);
-
 builder.AddProject<Store>("store")
        .WithExternalHttpEndpoints()
        .WithReference(cache)
