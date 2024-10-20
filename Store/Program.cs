@@ -22,6 +22,8 @@ builder.Services.AddHttpClient<ProductService>(client =>
     client.BaseAddress = new("https+http://products");
 });
 
+builder.Services.AddScoped<ICartService, CartServiceCache>();
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
