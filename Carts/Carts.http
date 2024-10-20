@@ -1,6 +1,0 @@
-@HostAddress = http://localhost:5098
-
-GET {{HostAddress}}/api/Cart
-Accept: application/json
-
-###

@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eShopLite.ServiceDefaults",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestData", "TestData\TestData.csproj", "{725B03DE-49A5-4BEF-B8AA-F2D33A23A875}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carts", "Carts\Carts.csproj", "{58F86297-DA38-4E78-B5DF-1C6F49969AE8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,10 +45,6 @@ Global
 		{725B03DE-49A5-4BEF-B8AA-F2D33A23A875}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{725B03DE-49A5-4BEF-B8AA-F2D33A23A875}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{725B03DE-49A5-4BEF-B8AA-F2D33A23A875}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58F86297-DA38-4E78-B5DF-1C6F49969AE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58F86297-DA38-4E78-B5DF-1C6F49969AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58F86297-DA38-4E78-B5DF-1C6F49969AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58F86297-DA38-4E78-B5DF-1C6F49969AE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

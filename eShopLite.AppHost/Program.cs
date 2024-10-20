@@ -24,6 +24,7 @@ builder.AddProject<Carts>("carts")
 
 builder.AddProject<Store>("store")
        .WithExternalHttpEndpoints()
+       .WithReference(cache)
        .WithReference(products);
 
 builder.Build().Run();

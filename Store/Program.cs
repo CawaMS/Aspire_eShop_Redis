@@ -15,6 +15,9 @@ builder.Services.AddHttpClient<ProductService>(client =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Add Redis cache
+builder.AddRedisClient("cache");
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
