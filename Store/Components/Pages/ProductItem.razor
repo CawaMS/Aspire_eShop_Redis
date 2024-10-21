@@ -45,6 +45,8 @@
                     </button>
                 }
             </form>
+
+            <p><strong>@numInCart</strong> in <a href="cart">shopping bag</a></p>
         </div>
     </div>
     
@@ -62,6 +64,7 @@ else if (notFound)
     private Product? product;
     private bool notFound = false;
     private bool isLoggedIn;
+    private int numInCart;
 
     [Parameter]
     public int productId { get; set; }
@@ -76,6 +79,7 @@ else if (notFound)
             HttpContext = HttpContextAccessor.HttpContext;
             isLoggedIn = HttpContext?.User.Identity?.IsAuthenticated == true;
             product = await ProductService.GetProductById(productId);
+            await UpdateNumInCartAsync();
         }catch (Exception ex)
         {
             HttpContext!.Response.StatusCode = 404;
@@ -96,6 +100,7 @@ else if (notFound)
             if (HttpContext?.User.Identity?.Name != null)
             {
                 await CartService.AddItem(HttpContext.User.Identity.Name, product.Id,product.Price,1);
+                await UpdateNumInCartAsync();
             }
             else
             {
@@ -103,6 +108,12 @@ else if (notFound)
                 return;
             }
         }
+    }
+
+    private async Task UpdateNumInCartAsync()
+    {
+        var items = await CartService.GetCartItems(HttpContext!.User.Identity!.Name).ToListAsync();
+        numInCart = items.FirstOrDefault(row => row.ItemId == productId)?.Quantity ?? 0;
     }
 
     
