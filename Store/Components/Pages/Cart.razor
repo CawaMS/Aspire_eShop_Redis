@@ -34,7 +34,7 @@
                 var quantity = CurrentOrPendingQuantity(item.ItemId, item.Quantity);
                 <div class="cart-item" @key="@item.Id">
                     <div class="catalog-item-info">
-                        <img alt="@item.ItemId" src="https://raw.githubusercontent.com/MicrosoftDocs/mslearn-dotnet-cloudnative/main/dotnet-docker/Products/wwwroot/images/product1.png" />
+                        <img alt="@item.ItemId" src=@(String.Format("https://raw.githubusercontent.com/MicrosoftDocs/mslearn-dotnet-cloudnative/main/dotnet-docker/Products/wwwroot/images/product{0}.png",item.ItemId)) />
                         <div class="catalog-item-content">
                             <p class="name">@item.ItemId</p>
                             <p class="price">$@item.UnitPrice.ToString("0.00")</p>
