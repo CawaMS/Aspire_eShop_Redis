@@ -84,9 +84,17 @@ namespace Store.Services
 
         }
 
-        public Task<Cart> SetQuantities(int cartId, Dictionary<string, int> quantities)
+        public async Task SetQuantities(string userName, int productId, int quantity)
         {
-            throw new NotImplementedException();
+            var CartKey = GetCartKey(userName);
+            var CartHash = await _database.HashGetAllAsync(CartKey);
+            List<CartItem> CartItemList = await ConvertData<CartItem>.ByteArrayToObjectList(CartHash.Where(hashEntry => hashEntry.Name == CartItemListFieldKey).FirstOrDefault().Value).ToListAsync();
+            CartItem? cartItem = CartItemList.Where(item => item.ItemId == productId).FirstOrDefault();
+            CartItem newCartItem = new CartItem(productId, quantity, cartItem.UnitPrice);
+            CartItemList.Remove(cartItem);
+            CartItemList.Add(newCartItem);
+            byte[] CartItemListToUpdateByteArray = await ConvertData<CartItem>.ObjectListToByteArray(CartItemList);
+            await _database.HashSetAsync(CartKey, CartItemListFieldKey, CartItemListToUpdateByteArray);
         }
 
         public async Task TransferCart(string anonymousName, string userName)

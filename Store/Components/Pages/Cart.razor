@@ -32,7 +32,7 @@
             @foreach (var item in CartListItems)
             {
                 var quantity = CurrentOrPendingQuantity(item.ItemId, item.Quantity);
-                <div class="cart-item" @key="@item.Id">
+                <div class="cart-item" @key="@item.ItemId">
                     <div class="catalog-item-info">
                         <img alt="@item.ItemId" src=@(String.Format("https://raw.githubusercontent.com/MicrosoftDocs/mslearn-dotnet-cloudnative/main/dotnet-docker/Products/wwwroot/images/product{0}.png",item.ItemId)) />
                         <div class="catalog-item-content">
@@ -83,12 +83,11 @@
     }
 </div>
 
-<!--
+
 <form @formname="update-cart" @onsubmit="@UpdateQuantityAsync"></form>
--->
+
 @code {
     private List<CartItem>? CartListItems;
-    private DataEntities.Cart ShoppingCart;
 
     public HttpContext? HttpContext { get; set; }
 
@@ -114,11 +113,11 @@
         ? UpdateQuantityValue!.Value
         : cartQuantity;
 
-    // private async Task UpdateQuantityAsync()
-    // {
-    //     var id = UpdateQuantityId!.Value;
-    //     var quantity = UpdateQuantityValue!.Value;
-    //     await Basket.SetQuantityAsync(id, quantity);
-    //     basketItems = await Basket.GetBasketItemsAsync();
-    // }
+     private async Task UpdateQuantityAsync()
+     {
+         var id = UpdateQuantityId!.Value;
+         var quantity = UpdateQuantityValue!.Value;
+         await CartService.SetQuantities(HttpContext.User.Identity.Name, id, quantity);
+         CartListItems = await CartService.GetCartItems(HttpContext.User.Identity.Name).ToListAsync();
+     }
 }
