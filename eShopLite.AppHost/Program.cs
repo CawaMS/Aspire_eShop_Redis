@@ -7,6 +7,10 @@ var sql = builder.AddSqlServer("sqlserver")
                        .PublishAsAzureSqlDatabase()
                        .AddDatabase("ProductContext");
 
+// var sql = builder.AddSqlServer("sqlserver")
+//                        .PublishAsConnectionString()
+//                        .AddDatabase("ProductContext");
+
 //var sql = builder.AddSqlServer("sql")
 //                 .AddDatabase("ProductContext");
 

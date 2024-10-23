@@ -20,12 +20,31 @@
     else
     {
 
-          @foreach (var product in products)
+        for (int i = 0; i < 5; i++)
+        {
+            <div class="product-row">
+                @for (int j = i; j < products.Count; j+=5)
+                {
+                    <ProductListItem product="@products[j]" />
+                }
+            </div>
+        }
+        @*         for (int i = 0; i < products.Count; i += 5)
+        {
+            <div class="product-row">
+                @for (int j = i; j < i + 5 && j < products.Count; j++)
+                {
+                    <ProductListItem product="@products[j]" />
+                }
+            </div>
+        } *@
+
+@*           @foreach (var product in products)
           {
 
              <ProductListItem product="@product" />
 
-          }
+          } *@
         
     }
 </div>
