@@ -8,12 +8,12 @@ var builder = DistributedApplication.CreateBuilder(args);
 //                       .AddDatabase("ProductContext");
 
 var sql = builder.AddSqlServer("sql")
-                 .AddDatabase("ProductContext");
+                 .AddDatabase("ProductsContext");
 
 
 //var cache = builder.AddRedis("cache")
 //                   .PublishAsConnectionString();
-var cache = builder.AddRedis("cache");
+var cache = builder.AddRedis("redis");
 
 var products = builder.AddProject<Products>("products")
                 .WithExternalHttpEndpoints()
